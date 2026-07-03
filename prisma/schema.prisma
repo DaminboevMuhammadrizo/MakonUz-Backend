@@ -1,0 +1,59 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+enum UserRole {
+    ADMIN
+    MANAGER
+}
+
+enum LocationType {
+    COUNTRY
+    REGION
+    CITY
+}
+
+model User {
+    id       Int      @id @default(autoincrement())
+    fullname String
+    phone    String   @unique
+    pass     String
+    role     UserRole
+}
+
+model PlaceCategory {
+    id   Int     @id @default(autoincrement())
+    name String  @unique
+    img  String?
+}
+
+model Place {
+    id          Int       @id @default(autoincrement())
+    price       Float
+    title       String
+    description String
+    locationId  Int
+
+    location    Location @relation(fields: [locationId], references: [id])
+}
+
+model Location {
+    id        Int          @id @default(autoincrement())
+    name      String
+    type      LocationType
+    parentId  Int?         @map("parent_id")
+    createdAt DateTime     @default(now()) @map("created_at")
+    updatedAt DateTime     @updatedAt @map("updated_at")
+
+    parent   Location?  @relation("LocationHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+
+    children Location[] @relation("LocationHierarchy")
+    place    Place[]
+
+    @@index([parentId])
+    @@map("locations")
+}
