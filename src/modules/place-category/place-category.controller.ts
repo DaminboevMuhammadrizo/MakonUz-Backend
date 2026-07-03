@@ -1,4 +1,53 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { PlaceCategoryService } from './place-category.service';
+import { AuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/role.decorator';
+import { UserRole } from '@prisma/client';
+import { fileStorages } from 'src/common/types/upload_types';
+import { GetAllPlaceCategoryDto } from './dto/get.all.dto';
+import { ApiBearerAuth, ApiConsumes, ApiOperation } from '@nestjs/swagger';
+import { UpdatePlaceCategoryDto } from './dto/update.dto';
+import { CreatePlaceCategoryDto } from './dto/create.dto';
 
 @Controller('place-category')
-export class PlaceCategoryController {}
+export class PlaceCategoryController {
+    constructor(private readonly service: PlaceCategoryService) { }
+
+    @Get()
+    getAll(@Query() query: GetAllPlaceCategoryDto) {
+        return this.service.getAll(query)
+    }
+
+    @Post()
+    @ApiBearerAuth()
+    @ApiConsumes('multipart/form-data')
+    @ApiOperation({ summary: `${UserRole.ADMIN}` })
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles(UserRole.ADMIN)
+    @UseInterceptors(FileInterceptor('img', fileStorages(['image'])))
+    create(@Body() payload: CreatePlaceCategoryDto, @UploadedFile() img?: Express.Multer.File) {
+        return this.service.create(payload, img)
+    }
+
+    @Put(':id')
+    @ApiBearerAuth()
+    @ApiConsumes('multipart/form-data')
+    @ApiOperation({ summary: `${UserRole.ADMIN}` })
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles(UserRole.ADMIN)
+    @UseInterceptors(FileInterceptor('img', fileStorages(['image'])))
+    update(@Param('id', ParseIntPipe) id: number, @Body() payload: UpdatePlaceCategoryDto, @UploadedFile() img?: Express.Multer.File) {
+        return this.service.update(id, payload, img)
+    }
+
+    @Delete(':id')
+    @ApiBearerAuth()
+    @ApiOperation({ summary: `${UserRole.ADMIN}` })
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles(UserRole.ADMIN)
+    delete(@Param('id', ParseIntPipe) id: number) {
+        return this.service.delete(id)
+    }
+}

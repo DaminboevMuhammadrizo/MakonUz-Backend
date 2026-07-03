@@ -45,23 +45,28 @@ model PlaceCategory {
     id   Int     @id @default(autoincrement())
     name String  @unique
     img  String?
+
+    place Place[]
 }
 
 model Place {
     id         Int      @id @default(autoincrement())
     locationId Int
+    categoryId Int
     price      Float
     priceDesc  String?
     title      String
     desc       String
     ims        String[]
-    video      String
+    video      String?
     phone      String
     telegram   String?
     link       String?
     status     Status
+    views      Int      @default(0)
 
-    location Location @relation(fields: [locationId], references: [id])
+    location Location      @relation(fields: [locationId], references: [id])
+    category PlaceCategory @relation(fields: [categoryId], references: [id])
 
     userPlace UserPlace[]
 }
