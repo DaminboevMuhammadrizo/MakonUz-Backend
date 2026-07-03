@@ -17,12 +17,28 @@ enum LocationType {
     CITY
 }
 
+enum Status {
+    ACTIVE
+    INCATIVE
+}
+
 model User {
     id       Int      @id @default(autoincrement())
     fullname String
     phone    String   @unique
-    pass     String
+    pass     String?
     role     UserRole
+
+    userPlace UserPlace[]
+}
+
+model UserPlace {
+    id      Int @id @default(autoincrement())
+    userId  Int
+    placeId Int
+
+    user  User  @relation(fields: [userId], references: [id])
+    place Place @relation(fields: [placeId], references: [id])
 }
 
 model PlaceCategory {
@@ -32,13 +48,22 @@ model PlaceCategory {
 }
 
 model Place {
-    id          Int       @id @default(autoincrement())
-    price       Float
-    title       String
-    description String
-    locationId  Int
+    id         Int      @id @default(autoincrement())
+    locationId Int
+    price      Float
+    priceDesc  String?
+    title      String
+    desc       String
+    ims        String[]
+    video      String
+    phone      String
+    telegram   String?
+    link       String?
+    status     Status
 
-    location    Location @relation(fields: [locationId], references: [id])
+    location Location @relation(fields: [locationId], references: [id])
+
+    userPlace UserPlace[]
 }
 
 model Location {
@@ -49,7 +74,7 @@ model Location {
     createdAt DateTime     @default(now()) @map("created_at")
     updatedAt DateTime     @updatedAt @map("updated_at")
 
-    parent   Location?  @relation("LocationHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+    parent Location? @relation("LocationHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
 
     children Location[] @relation("LocationHierarchy")
     place    Place[]

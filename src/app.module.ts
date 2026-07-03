@@ -4,6 +4,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { PrismaModule } from './common/Database/prisma.module';
 import { JwtModules } from './common/config/jwt/jwt.module';
 import { CoreModule } from './common/core/core.module';
+import { UserModule } from './modules/user/user.module';
+import { PlaceCategoryModule } from './modules/place-category/place-category.module';
+import { PlaceModule } from './modules/place/place.module';
 
 @Module({
     imports: [
@@ -11,7 +14,10 @@ import { CoreModule } from './common/core/core.module';
         JwtModule.register({ global: true }),
         PrismaModule,
         JwtModules,
-        CoreModule
+        CoreModule,
+        UserModule,
+        PlaceCategoryModule,
+        PlaceModule
     ],
 })
 export class AppModule {}
