@@ -4,6 +4,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { PrismaModule } from './common/Database/prisma.module';
 import { JwtModules } from './common/config/jwt/jwt.module';
 import { CoreModule } from './common/core/core.module';
+import { R2Module } from './infra/r2/r2.module';
+import { RedisModule } from './infra/redis/redis.module';
 import { UserModule } from './modules/user/user.module';
 import { PlaceCategoryModule } from './modules/place-category/place-category.module';
 import { PlaceModule } from './modules/place/place.module';
@@ -15,6 +17,8 @@ import { PlaceModule } from './modules/place/place.module';
         PrismaModule,
         JwtModules,
         CoreModule,
+        R2Module,
+        RedisModule,
         UserModule,
         PlaceCategoryModule,
         PlaceModule

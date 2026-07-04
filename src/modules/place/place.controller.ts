@@ -5,7 +5,6 @@ import { AuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/role.decorator';
 import { Status, UserRole } from '@prisma/client';
-import { fileStorages } from 'src/common/types/upload_types';
 import { GetAllPlaceDto } from './dto/get.all.dto';
 import { GetAllPlaceFreeDto } from './dto/get.all.free.dto';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation } from '@nestjs/swagger';
@@ -14,7 +13,6 @@ import { UpdatePlaceDto } from './dto/update.dto';
 
 const placeFilesInterceptor = FileFieldsInterceptor(
     [{ name: 'ims', maxCount: 10 }, { name: 'video', maxCount: 1 }],
-    fileStorages(['image', 'video']),
 )
 
 @Controller('place')

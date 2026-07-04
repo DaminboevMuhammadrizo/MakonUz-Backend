@@ -5,7 +5,6 @@ import { AuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/role.decorator';
 import { UserRole } from '@prisma/client';
-import { fileStorages } from 'src/common/types/upload_types';
 import { GetAllPlaceCategoryDto } from './dto/get.all.dto';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation } from '@nestjs/swagger';
 import { UpdatePlaceCategoryDto } from './dto/update.dto';
@@ -38,7 +37,7 @@ export class PlaceCategoryController {
     })
     @UseGuards(AuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
-    @UseInterceptors(FileInterceptor('img', fileStorages(['image'])))
+    @UseInterceptors(FileInterceptor('img'))
     create(@Body() payload: CreatePlaceCategoryDto, @UploadedFile() img?: Express.Multer.File) {
         return this.service.create(payload, img)
     }
@@ -60,7 +59,7 @@ export class PlaceCategoryController {
     })
     @UseGuards(AuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
-    @UseInterceptors(FileInterceptor('img', fileStorages(['image'])))
+    @UseInterceptors(FileInterceptor('img'))
     update(@Param('id', ParseIntPipe) id: number, @Body() payload: UpdatePlaceCategoryDto, @UploadedFile() img?: Express.Multer.File) {
         return this.service.update(id, payload, img)
     }

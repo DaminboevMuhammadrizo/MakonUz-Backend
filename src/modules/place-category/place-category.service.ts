@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/common/Database/prisma.service';
-import { urlGenerator } from 'src/common/types/generator.types';
+import { R2Service } from 'src/infra/r2/r2.service';
 import { GetAllPlaceCategoryDto } from './dto/get.all.dto';
 import { UpdatePlaceCategoryDto } from './dto/update.dto';
 import { CreatePlaceCategoryDto } from './dto/create.dto';
 
 @Injectable()
 export class PlaceCategoryService {
-    constructor(private readonly prisma: PrismaService, private readonly config: ConfigService) { }
+    constructor(private readonly prisma: PrismaService, private readonly r2: R2Service) { }
 
     async getAll(query: GetAllPlaceCategoryDto) {
         return await this.prisma.placeCategory.findMany({
@@ -26,18 +25,20 @@ export class PlaceCategoryService {
 
     async create(payload: CreatePlaceCategoryDto, img?: Express.Multer.File) {
         return await this.prisma.placeCategory.create({
-            data: { ...payload, img: img ? urlGenerator(this.config, img.filename) : undefined }
+            data: { ...payload, img: img ? await this.r2.upload(img) : undefined }
         })
     }
 
     async update(id: number, payload: UpdatePlaceCategoryDto, img?: Express.Multer.File) {
         return await this.prisma.placeCategory.update({
             where: { id },
-            data: { ...payload, img: img ? urlGenerator(this.config, img.filename) : undefined }
+            data: { ...payload, img: img ? await this.r2.upload(img) : undefined }
         })
     }
 
     async delete(id: number) {
-        return await this.prisma.placeCategory.delete({ where: { id } })
+        const category = await this.prisma.placeCategory.delete({ where: { id } })
+        if (category.img) await this.r2.delete(category.img)
+        return category
     }
 }
