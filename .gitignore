@@ -5,7 +5,6 @@ node_modules
 
 # Prisma generated
 /generated/prisma
-prisma/migrations
 
 # Logs
 logs
