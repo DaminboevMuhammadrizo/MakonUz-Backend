@@ -7,7 +7,7 @@ import { Roles } from 'src/common/decorators/role.decorator';
 import { UserRole } from '@prisma/client';
 import { fileStorages } from 'src/common/types/upload_types';
 import { GetAllPlaceCategoryDto } from './dto/get.all.dto';
-import { ApiBearerAuth, ApiConsumes, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation } from '@nestjs/swagger';
 import { UpdatePlaceCategoryDto } from './dto/update.dto';
 import { CreatePlaceCategoryDto } from './dto/create.dto';
 
@@ -24,6 +24,18 @@ export class PlaceCategoryController {
     @ApiBearerAuth()
     @ApiConsumes('multipart/form-data')
     @ApiOperation({ summary: `${UserRole.ADMIN}` })
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                nameUz: { type: 'string' },
+                nameRu: { type: 'string' },
+                nameEn: { type: 'string' },
+                img: { type: 'string', format: 'binary' },
+            },
+            required: ['nameUz', 'nameRu', 'nameEn'],
+        },
+    })
     @UseGuards(AuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     @UseInterceptors(FileInterceptor('img', fileStorages(['image'])))
@@ -35,6 +47,17 @@ export class PlaceCategoryController {
     @ApiBearerAuth()
     @ApiConsumes('multipart/form-data')
     @ApiOperation({ summary: `${UserRole.ADMIN}` })
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                nameUz: { type: 'string' },
+                nameRu: { type: 'string' },
+                nameEn: { type: 'string' },
+                img: { type: 'string', format: 'binary' },
+            },
+        },
+    })
     @UseGuards(AuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     @UseInterceptors(FileInterceptor('img', fileStorages(['image'])))

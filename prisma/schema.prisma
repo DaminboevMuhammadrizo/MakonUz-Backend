@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
+    provider  = "postgresql"
 }
 
 enum UserRole {
@@ -19,7 +19,7 @@ enum LocationType {
 
 enum Status {
     ACTIVE
-    INCATIVE
+    INACTIVE
 }
 
 model User {
@@ -42,9 +42,11 @@ model UserPlace {
 }
 
 model PlaceCategory {
-    id   Int     @id @default(autoincrement())
-    name String  @unique
-    img  String?
+    id     Int     @id @default(autoincrement())
+    nameUz String  @unique
+    nameRu String
+    nameEn String
+    img    String?
 
     place Place[]
 }

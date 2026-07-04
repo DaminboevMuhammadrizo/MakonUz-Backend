@@ -3,5 +3,11 @@ import { IsString } from "class-validator"
 export class CreatePlaceCategoryDto {
 
     @IsString()
-    name: string
+    nameUz: string
+
+    @IsString()
+    nameRu: string
+
+    @IsString()
+    nameEn: string
 }

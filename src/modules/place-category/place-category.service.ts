@@ -13,7 +13,11 @@ export class PlaceCategoryService {
     async getAll(query: GetAllPlaceCategoryDto) {
         return await this.prisma.placeCategory.findMany({
             where: {
-                name: query.search ? { contains: query.search, mode: 'insensitive' } : undefined,
+                OR: query.search ? [
+                    { nameUz: { contains: query.search, mode: 'insensitive' } },
+                    { nameRu: { contains: query.search, mode: 'insensitive' } },
+                    { nameEn: { contains: query.search, mode: 'insensitive' } },
+                ] : undefined,
             },
             skip: ((query.page || 1) - 1) * (query.limit || 10),
             take: query.limit || 10,

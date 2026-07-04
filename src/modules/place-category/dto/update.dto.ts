@@ -4,5 +4,13 @@ export class UpdatePlaceCategoryDto {
 
     @IsString()
     @IsOptional()
-    name?: string
+    nameUz?: string
+
+    @IsString()
+    @IsOptional()
+    nameRu?: string
+
+    @IsString()
+    @IsOptional()
+    nameEn?: string
 }

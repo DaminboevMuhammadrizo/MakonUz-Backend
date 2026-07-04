@@ -4,11 +4,11 @@ import { PlaceService } from './place.service';
 import { AuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/role.decorator';
-import { UserRole } from '@prisma/client';
+import { Status, UserRole } from '@prisma/client';
 import { fileStorages } from 'src/common/types/upload_types';
 import { GetAllPlaceDto } from './dto/get.all.dto';
 import { GetAllPlaceFreeDto } from './dto/get.all.free.dto';
-import { ApiBearerAuth, ApiConsumes, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation } from '@nestjs/swagger';
 import { CreatePlaceDto } from './dto/create.dto';
 import { UpdatePlaceDto } from './dto/update.dto';
 
@@ -40,6 +40,26 @@ export class PlaceController {
     @ApiBearerAuth()
     @ApiConsumes('multipart/form-data')
     @ApiOperation({ summary: `${UserRole.ADMIN}, ${UserRole.MANAGER}` })
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                locationId: { type: 'number' },
+                categoryId: { type: 'number' },
+                price: { type: 'number' },
+                priceDesc: { type: 'string' },
+                title: { type: 'string' },
+                desc: { type: 'string' },
+                phone: { type: 'string' },
+                telegram: { type: 'string' },
+                link: { type: 'string' },
+                status: { type: 'string', enum: Object.values(Status) },
+                ims: { type: 'array', items: { type: 'string', format: 'binary' } },
+                video: { type: 'string', format: 'binary' },
+            },
+            required: ['locationId', 'categoryId', 'price', 'title', 'desc', 'phone', 'status'],
+        },
+    })
     @UseGuards(AuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN, UserRole.MANAGER)
     @UseInterceptors(placeFilesInterceptor)
@@ -51,6 +71,25 @@ export class PlaceController {
     @ApiBearerAuth()
     @ApiConsumes('multipart/form-data')
     @ApiOperation({ summary: `${UserRole.ADMIN}, ${UserRole.MANAGER}` })
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                locationId: { type: 'number' },
+                categoryId: { type: 'number' },
+                price: { type: 'number' },
+                priceDesc: { type: 'string' },
+                title: { type: 'string' },
+                desc: { type: 'string' },
+                phone: { type: 'string' },
+                telegram: { type: 'string' },
+                link: { type: 'string' },
+                status: { type: 'string', enum: Object.values(Status) },
+                ims: { type: 'array', items: { type: 'string', format: 'binary' } },
+                video: { type: 'string', format: 'binary' },
+            },
+        },
+    })
     @UseGuards(AuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN, UserRole.MANAGER)
     @UseInterceptors(placeFilesInterceptor)
